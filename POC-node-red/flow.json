@@ -1,0 +1,1288 @@
+[
+    {
+        "id": "a0cf3fb6bfd251c5",
+        "type": "tab",
+        "label": "Dirigera Proof of concept ",
+        "disabled": false,
+        "info": "Proof of concept to link Dirigera Hub with Node-Red\n\nBased on https://github.com/mattias73andersson/dirigera-client-poc\n",
+        "env": []
+    },
+    {
+        "id": "1fbd9c480caef5b2",
+        "type": "group",
+        "z": "a0cf3fb6bfd251c5",
+        "name": "Get Authentication Token",
+        "style": {
+            "stroke": "#0070c0",
+            "fill": "#ffffbf",
+            "label": true,
+            "label-position": "n",
+            "color": "#0070c0"
+        },
+        "nodes": [
+            "a61c8273af0e0587",
+            "4efe7e84ff28e2af",
+            "fe3e9c2b6ea4cbf9",
+            "cd485db1810bce8c",
+            "2192938724486b81",
+            "a06ffce08fefea60",
+            "bc6a5e643c471d4f",
+            "bdb11fa9321a05ce",
+            "2a1e5b6fb94fceb3",
+            "9c6fd4055a360814",
+            "e8b498a728ae58ed",
+            "c01859a5aa79644b",
+            "4bdc89b5157374e2",
+            "4070d5d653cf174a",
+            "d5ccd7f986d79e34",
+            "3cd515a8d5156bb4",
+            "60844753b6101e43",
+            "feb5d902c9976fa1",
+            "c066a33ea56157f3",
+            "684b0a3a0ca9806a",
+            "fab37d011216ee7e",
+            "65f4b7f1cfe37209",
+            "ab6ea2497fc0536a"
+        ],
+        "x": 54,
+        "y": 39,
+        "w": 1692,
+        "h": 382
+    },
+    {
+        "id": "271885d7e12005ea",
+        "type": "group",
+        "z": "a0cf3fb6bfd251c5",
+        "name": "Build Device Object (used in control flows below)",
+        "style": {
+            "stroke": "#0070c0",
+            "fill": "#ffffbf",
+            "label": true,
+            "label-position": "n",
+            "color": "#0070c0"
+        },
+        "nodes": [
+            "2235593008aada8d",
+            "261b4c65e7f3595a",
+            "bf8a16452be0edd4",
+            "36a0b40741a12650",
+            "f67c395cf5424748",
+            "aeb83352d3322310"
+        ],
+        "x": 74,
+        "y": 479,
+        "w": 1612,
+        "h": 82
+    },
+    {
+        "id": "a655cfd1dd64e9fa",
+        "type": "group",
+        "z": "a0cf3fb6bfd251c5",
+        "name": "Control Devices / Get info from Hub",
+        "style": {
+            "stroke": "#ffff00",
+            "fill": "#bfdbef",
+            "label": true,
+            "label-position": "n",
+            "color": "#0070c0"
+        },
+        "nodes": [
+            "5f8f29931f7b2a0b",
+            "07cfb580b6453288",
+            "301cf90c89e39b1b",
+            "fe5836c181e9585c",
+            "0402b8474932f07d",
+            "832a8c846e69800d",
+            "d9e55eacd765eee5",
+            "a7c5c0c45fe0437f",
+            "ef0e098535e400fe",
+            "8077493bb2f87d96",
+            "41c4d9b78cb2a6f3",
+            "7ffbc53e8a65e9f8",
+            "7d0837807afd9091",
+            "9a95a0a8172869b0",
+            "ce8c1f452c2b3195",
+            "bf46f2b3705f563a",
+            "f9047fc778b2d706",
+            "fa8f13238310b8ef",
+            "7f236f109ca63411"
+        ],
+        "x": 94,
+        "y": 719,
+        "w": 1552,
+        "h": 622
+    },
+    {
+        "id": "a61c8273af0e0587",
+        "type": "http request",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "query",
+        "url": "https://192.168.0.168:8443/v1/oauth/authorize",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": true,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "application/x-www-form-urlencoded"
+            }
+        ],
+        "x": 830,
+        "y": 220,
+        "wires": [
+            [
+                "cd485db1810bce8c",
+                "4070d5d653cf174a"
+            ]
+        ]
+    },
+    {
+        "id": "4efe7e84ff28e2af",
+        "type": "debug",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "debug 22",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1640,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "fe3e9c2b6ea4cbf9",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "function 15",
+        "func": "//code_challenge = Buffer.from( msg.payload ).toString('base64url')\nmsg.ip=flow.get(\"dirigeraIP\")\n\n\nmsg.url= \"https://\"+msg.ip+\":8443/v1/oauth/authorize\"\n\n\n\n\n\n\n\n\ncode_challenge = msg.payload \n\nnode.warn(\"BASE64 \"+code_challenge)\n\n\nmsg.payload= {}\n\n\nmsg.payload.audience= \"homesmart.local\"\nmsg.payload.response_type= \"code\"\nmsg.payload.code_challenge= code_challenge\nmsg.payload.code_challenge_method= \"S256\"\n\n\nmsg.rejectUnauthorized = false\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 630,
+        "y": 220,
+        "wires": [
+            [
+                "a61c8273af0e0587",
+                "d5ccd7f986d79e34"
+            ]
+        ]
+    },
+    {
+        "id": "cd485db1810bce8c",
+        "type": "switch",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "",
+        "property": "payload.code",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "nempty"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 1030,
+        "y": 220,
+        "wires": [
+            [
+                "2192938724486b81"
+            ]
+        ]
+    },
+    {
+        "id": "2192938724486b81",
+        "type": "change",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "dirigeraResponseCode",
+                "pt": "flow",
+                "to": "payload.code",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1230,
+        "y": 220,
+        "wires": [
+            [
+                "a06ffce08fefea60"
+            ]
+        ]
+    },
+    {
+        "id": "a06ffce08fefea60",
+        "type": "change",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "'Wait for button pressed (actionbutton on Dirigera)...'",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1480,
+        "y": 220,
+        "wires": [
+            [
+                "4efe7e84ff28e2af"
+            ]
+        ]
+    },
+    {
+        "id": "bc6a5e643c471d4f",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "4) Click after pressing Dirigera Action Button (on base)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 300,
+        "y": 380,
+        "wires": [
+            [
+                "bdb11fa9321a05ce"
+            ]
+        ]
+    },
+    {
+        "id": "bdb11fa9321a05ce",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "function 16",
+        "func": "msg.ip=flow.get(\"dirigeraIP\")\n\n\nmsg.url= \"https://\"+msg.ip+\":8443/v1/oauth/token\"\n\n\n\ndirigeraResponseCode = flow.get(\"dirigeraResponseCode\")\nhostname=flow.get(\"hostname\")\n\ncodeVerifier = flow.get(\"Dirigera128Code\")\nnode.warn(\"Cv\" + codeVerifier)\n\nmsg.rejectUnauthorized = false\n\nmsg.payload = \"code=\" + dirigeraResponseCode\nmsg.payload += \"&name=\" + hostname\nmsg.payload += \"&grant_type=authorization_code\"\nmsg.payload += \"&code_verifier=\" + codeVerifier\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 380,
+        "wires": [
+            [
+                "9c6fd4055a360814"
+            ]
+        ]
+    },
+    {
+        "id": "2a1e5b6fb94fceb3",
+        "type": "debug",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "debug 26",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.access_token",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1300,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "9c6fd4055a360814",
+        "type": "http request",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": true,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "Content-Type",
+                "valueType": "other",
+                "valueValue": "application/x-www-form-urlencoded"
+            }
+        ],
+        "x": 790,
+        "y": 380,
+        "wires": [
+            [
+                "ab6ea2497fc0536a"
+            ]
+        ]
+    },
+    {
+        "id": "e8b498a728ae58ed",
+        "type": "debug",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "digest",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 550,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "c01859a5aa79644b",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "function 18",
+        "func": "\nCodeAlphabet = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~\"\nCodeLength = 128\n\nfunction generateRandomLetter() {\n    //node.warn(\"random\")\n    return CodeAlphabet[Math.floor(Math.random() * CodeAlphabet.length)]\n}\n\nfunction getCodeVerifier() {\n\n    //node.warn(\"getCodeVerifier\")\n    s = \"\"\n    for (let i = 0; i < CodeLength; i++) {\n        s += generateRandomLetter()\n    }\n    return s\n}\n\n//var crypto = require('crypto');\n\ns=getCodeVerifier ()\n\nflow.set(\"Dirigera128Code\", s); \n\nmsg.payload = crypto.createHash('sha256').update(s).digest('base64').replace(/=+$/, \"\");\n\nmsg.payload = msg.payload.replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/, '');\n\n\n\nnode.warn(\"DIGEST\"+msg.payload)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "crypto",
+                "module": "crypto"
+            }
+        ],
+        "x": 430,
+        "y": 220,
+        "wires": [
+            [
+                "e8b498a728ae58ed",
+                "fe3e9c2b6ea4cbf9"
+            ]
+        ]
+    },
+    {
+        "id": "4bdc89b5157374e2",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "3) Start Authentication",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 220,
+        "wires": [
+            [
+                "c01859a5aa79644b"
+            ]
+        ]
+    },
+    {
+        "id": "4070d5d653cf174a",
+        "type": "debug",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "debug 27",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1020,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "d5ccd7f986d79e34",
+        "type": "debug",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "debug 28",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 780,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "3cd515a8d5156bb4",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "1) Add Dirigera IP address to function node",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 280,
+        "y": 80,
+        "wires": [
+            [
+                "fab37d011216ee7e"
+            ]
+        ]
+    },
+    {
+        "id": "60844753b6101e43",
+        "type": "debug",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "debug 29",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.hostname",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1200,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "feb5d902c9976fa1",
+        "type": "OS",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "",
+        "x": 410,
+        "y": 140,
+        "wires": [
+            [
+                "684b0a3a0ca9806a"
+            ]
+        ]
+    },
+    {
+        "id": "c066a33ea56157f3",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "2) Determine hostname",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 140,
+        "wires": [
+            [
+                "feb5d902c9976fa1"
+            ]
+        ]
+    },
+    {
+        "id": "684b0a3a0ca9806a",
+        "type": "change",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "hostname",
+                "pt": "flow",
+                "to": "payload.hostname",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 750,
+        "y": 140,
+        "wires": [
+            [
+                "60844753b6101e43"
+            ]
+        ]
+    },
+    {
+        "id": "fab37d011216ee7e",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "function 19",
+        "func": "msg.ip = \"ADD IP ADDRESS HERE\" // e.g. \"192.168.0.2\"\nmsg.ip = \"192.168.0.168\"\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 80,
+        "wires": [
+            [
+                "65f4b7f1cfe37209"
+            ]
+        ]
+    },
+    {
+        "id": "65f4b7f1cfe37209",
+        "type": "change",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "dirigeraIP",
+                "pt": "flow",
+                "to": "ip",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 770,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ab6ea2497fc0536a",
+        "type": "change",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "1fbd9c480caef5b2",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "dirigeraAccess_token",
+                "pt": "global",
+                "to": "payload.access_token",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1050,
+        "y": 380,
+        "wires": [
+            [
+                "2a1e5b6fb94fceb3"
+            ]
+        ]
+    },
+    {
+        "id": "5f8f29931f7b2a0b",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "devices",
+        "payloadType": "str",
+        "x": 230,
+        "y": 1120,
+        "wires": [
+            [
+                "0402b8474932f07d"
+            ]
+        ]
+    },
+    {
+        "id": "07cfb580b6453288",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "hub/status",
+        "payloadType": "str",
+        "x": 240,
+        "y": 1180,
+        "wires": [
+            [
+                "0402b8474932f07d"
+            ]
+        ]
+    },
+    {
+        "id": "301cf90c89e39b1b",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "scenes",
+        "payloadType": "str",
+        "x": 230,
+        "y": 1240,
+        "wires": [
+            [
+                "0402b8474932f07d"
+            ]
+        ]
+    },
+    {
+        "id": "fe5836c181e9585c",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "music",
+        "payloadType": "str",
+        "x": 230,
+        "y": 1300,
+        "wires": [
+            [
+                "0402b8474932f07d"
+            ]
+        ]
+    },
+    {
+        "id": "0402b8474932f07d",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "function 25",
+        "func": "dirigeraAccess_token=global.get(\"dirigeraAccess_token\")\n\nmsg.rejectUnauthorized = false\n\nmsg.ip=flow.get(\"dirigeraIP\")\n\n\nmsg.url= \"https://\"+msg.ip+\":8443/v1/\"+msg.payload\n\n\n\nmsg.headers = { \"Authorization\": \"Bearer \"+dirigeraAccess_token}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 1180,
+        "wires": [
+            [
+                "832a8c846e69800d"
+            ]
+        ]
+    },
+    {
+        "id": "832a8c846e69800d",
+        "type": "http request",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 790,
+        "y": 1180,
+        "wires": [
+            [
+                "a7c5c0c45fe0437f"
+            ]
+        ]
+    },
+    {
+        "id": "d9e55eacd765eee5",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "home",
+        "payloadType": "str",
+        "x": 230,
+        "y": 1060,
+        "wires": [
+            [
+                "0402b8474932f07d"
+            ]
+        ]
+    },
+    {
+        "id": "a7c5c0c45fe0437f",
+        "type": "debug",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "debug 35",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "2235593008aada8d",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "271885d7e12005ea",
+        "name": "5) Build device ID flow ",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "devices",
+        "payloadType": "str",
+        "x": 220,
+        "y": 520,
+        "wires": [
+            [
+                "261b4c65e7f3595a"
+            ]
+        ]
+    },
+    {
+        "id": "261b4c65e7f3595a",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "271885d7e12005ea",
+        "name": "function 28",
+        "func": "dirigeraAccess_token=global.get(\"dirigeraAccess_token\")\n\nmsg.rejectUnauthorized = false\n\nmsg.ip=flow.get(\"dirigeraIP\")\n\n\nmsg.url= \"https://\"+msg.ip+\":8443/v1/\"+msg.payload\n\n\n\nmsg.headers = { \"Authorization\": \"Bearer \"+dirigeraAccess_token}\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 520,
+        "wires": [
+            [
+                "bf8a16452be0edd4"
+            ]
+        ]
+    },
+    {
+        "id": "bf8a16452be0edd4",
+        "type": "http request",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "271885d7e12005ea",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 730,
+        "y": 520,
+        "wires": [
+            [
+                "f67c395cf5424748"
+            ]
+        ]
+    },
+    {
+        "id": "36a0b40741a12650",
+        "type": "debug",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "271885d7e12005ea",
+        "name": "debug 37",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1580,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "f67c395cf5424748",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "271885d7e12005ea",
+        "name": "function 29",
+        "func": "connectedDevices ={}\n \n    for (index = 0; index < msg.payload.length; index++)\n    {\n       deviceAttributes = {}\n       \n       deviceType=msg.payload[index].type\n       \n      \n       if (!connectedDevices.hasOwnProperty(deviceType)) {\n           connectedDevices[deviceType]=[]\n       }\n     \n     deviceAttributes.id = msg.payload[index].id\n     deviceAttributes.customName = msg.payload[index].attributes.customName\n     \n       \n       connectedDevices[deviceType].push(deviceAttributes);\n    }\n\n\n\nmsg.payload = connectedDevices\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1110,
+        "y": 520,
+        "wires": [
+            [
+                "aeb83352d3322310"
+            ]
+        ]
+    },
+    {
+        "id": "aeb83352d3322310",
+        "type": "change",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "271885d7e12005ea",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "connectedDevices",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1380,
+        "y": 520,
+        "wires": [
+            [
+                "36a0b40741a12650"
+            ]
+        ]
+    },
+    {
+        "id": "ef0e098535e400fe",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "function 23",
+        "func": "dirigeraAccess_token=global.get(\"dirigeraAccess_token\")\n\nmsg.ip=flow.get(\"dirigeraIP\")\n\nconnectedDevices=flow.get(\"connectedDevices\")\n\nmsg.device= connectedDevices.light[0]\n\nmsg.url= \"https://\"+msg.ip+\":8443/v1/devices/\"+msg.device.id\n\nmsg.rejectUnauthorized = false\n\nmsg.method=\"PATCH\"\nmsg.method.toUpperCase()\n\nmsg.headers = { \"Authorization\": \"Bearer \"+dirigeraAccess_token}\n\nmsg.payload =[]\nmsg.payload[0] ={}\nmsg.payload[0].attributes ={}\nmsg.payload[0].attributes.isOn = true\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 760,
+        "wires": [
+            [
+                "ce8c1f452c2b3195"
+            ]
+        ]
+    },
+    {
+        "id": "8077493bb2f87d96",
+        "type": "http request",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "query",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1250,
+        "y": 760,
+        "wires": [
+            [
+                "7ffbc53e8a65e9f8"
+            ]
+        ]
+    },
+    {
+        "id": "41c4d9b78cb2a6f3",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "Turn On Light",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 760,
+        "wires": [
+            [
+                "ef0e098535e400fe"
+            ]
+        ]
+    },
+    {
+        "id": "7ffbc53e8a65e9f8",
+        "type": "debug",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "debug 33",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1540,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "7d0837807afd9091",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "function 27",
+        "func": "dirigeraAccess_token=global.get(\"dirigeraAccess_token\")\n\nmsg.ip=flow.get(\"dirigeraIP\")\n\nconnectedDevices=flow.get(\"connectedDevices\")\n\nmsg.device= connectedDevices.light[0]\n\nmsg.url= \"https://\"+msg.ip+\":8443/v1/devices/\"+msg.device.id\n\nmsg.rejectUnauthorized = false\n\nmsg.method=\"PATCH\"\nmsg.method.toUpperCase()\n\nmsg.headers = { \"Authorization\": \"Bearer \"+dirigeraAccess_token}\n\nmsg.payload =[]\nmsg.payload[0] ={}\nmsg.payload[0].attributes={}\n\nmsg.payload[0].attributes.lightLevel = 35\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 840,
+        "wires": [
+            [
+                "ce8c1f452c2b3195"
+            ]
+        ]
+    },
+    {
+        "id": "9a95a0a8172869b0",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "Dim Light",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 840,
+        "wires": [
+            [
+                "7d0837807afd9091"
+            ]
+        ]
+    },
+    {
+        "id": "ce8c1f452c2b3195",
+        "type": "switch",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "Check if device is in array",
+        "property": "device",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "hask",
+                "v": "id",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 930,
+        "y": 760,
+        "wires": [
+            [
+                "8077493bb2f87d96"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "bf46f2b3705f563a",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "function 30",
+        "func": "dirigeraAccess_token=global.get(\"dirigeraAccess_token\")\n\nmsg.ip=flow.get(\"dirigeraIP\")\n\nconnectedDevices=flow.get(\"connectedDevices\")\n\nmsg.device= connectedDevices.outlet[0]\n\nmsg.url= \"https://\"+msg.ip+\":8443/v1/devices/\"+msg.device.id\n\nmsg.rejectUnauthorized = false\n\nmsg.method=\"PATCH\"\nmsg.method.toUpperCase()\n\nmsg.headers = { \"Authorization\": \"Bearer \"+dirigeraAccess_token}\n\nmsg.payload =[]\nmsg.payload[0] ={}\nmsg.payload[0].attributes ={}\nmsg.payload[0].attributes.isOn = true\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 920,
+        "wires": [
+            [
+                "ce8c1f452c2b3195"
+            ]
+        ]
+    },
+    {
+        "id": "f9047fc778b2d706",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "Turn On Socket",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 920,
+        "wires": [
+            [
+                "bf46f2b3705f563a"
+            ]
+        ]
+    },
+    {
+        "id": "fa8f13238310b8ef",
+        "type": "function",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "function 31",
+        "func": "dirigeraAccess_token=global.get(\"dirigeraAccess_token\")\n\nmsg.ip=flow.get(\"dirigeraIP\")\n\nconnectedDevices=flow.get(\"connectedDevices\")\n\nmsg.device= connectedDevices.outlet[0]\n\nmsg.url= \"https://\"+msg.ip+\":8443/v1/devices/\"+msg.device.id\n\nmsg.rejectUnauthorized = false\n\nmsg.method=\"PATCH\"\nmsg.method.toUpperCase()\n\nmsg.headers = { \"Authorization\": \"Bearer \"+dirigeraAccess_token}\n\nmsg.payload =[]\nmsg.payload[0] ={}\nmsg.payload[0].attributes ={}\nmsg.payload[0].attributes.isOn = false\n\n\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 980,
+        "wires": [
+            [
+                "ce8c1f452c2b3195"
+            ]
+        ]
+    },
+    {
+        "id": "7f236f109ca63411",
+        "type": "inject",
+        "z": "a0cf3fb6bfd251c5",
+        "g": "a655cfd1dd64e9fa",
+        "name": "Turn Off Socket",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 980,
+        "wires": [
+            [
+                "fa8f13238310b8ef"
+            ]
+        ]
+    }
+]
