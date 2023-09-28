@@ -1,3 +1,5 @@
+THIS CONTENT IS A COPY OF https://github.com/mattias73andersson/dirigera-client-poc on 2023-09-28
+
 # dirigera-client-poc
 Simple client for interacting with the IKEA Dirigera hub (made as a proof-of-concept)
 
