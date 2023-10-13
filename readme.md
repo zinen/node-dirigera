@@ -32,7 +32,7 @@ async function start() {
   const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2'})
   // The next command can take up to 1 minute as it will be waiting for you to push the button.
   // it will continuously check the hub for a push. Once the button is pressed you will get the access token.
-  // If you done make it to the hub an error is thrown(promise reject).
+  // If you don't make it to the hub an error is thrown(promise reject).
   try {
     accessToken = await dirigeraHub.getAccessToken()
     console.log('All good. Here is your access token:')
@@ -71,7 +71,6 @@ async function start() {
   } catch (error) {
     console.warn('Login failed. Access token might be invalid')
   }
-  
 }
 start()
 ```
@@ -86,8 +85,6 @@ async function start() {
   const attribute = 'blindsTargetLevel' // Allowed values can be found via getDevice() under capabilities.canReceive
   const value = 0 // 0 = open, 100 = close
   await dirigeraHub.setDevice(device, attribute, value)
-
-
 }
 start()
 ```
@@ -114,7 +111,8 @@ async function start() {
   const room = 'Bedroom'
   const value = 0 // 0 = open, 100 = close
   const deviceType = 'blinds' // Optional: Limit to specific device type
-  await dirigeraHub.setRoom(room, attribute, value,deviceType)
+  const result = await dirigeraHub.setRoom(room, attribute, value,deviceType)
+  // result = { ok: [list of devices handled ok], errors: [list of errors if any] }
 }
 start()
 ```
