@@ -1,4 +1,11 @@
+# Node-dirigera
 
+*NOT ON npmjs.com yet* 
+
+Early work in progress
+
+Node.js module to interact with Dirigera hub from Ikea smart home system as of year 2023.
+This module aims for low amount of dependencies and promise based.
 
 
 ## Examples
@@ -23,8 +30,16 @@ How to get an access token
 ```js
 async function start() {
   const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2'})
-  accessToken = await dirigeraHub.getAccessToken()
-  console.log(accessToken)
+  // The next command can take up to 1 minute as it will be waiting for you to push the button.
+  // it will continuously check the hub for a push. Once the button is pressed you will get the access token.
+  // If you done make it to the hub an error is thrown(promise reject).
+  try {
+    accessToken = await dirigeraHub.getAccessToken()
+    console.log('All good. Here is your access token:')
+    console.log(accessToken)
+  } catch (error) {
+    console.log(error)
+  }
   // Save accessToken to disk, .env or other config
 }
 start()
