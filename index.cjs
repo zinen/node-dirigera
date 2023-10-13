@@ -27,7 +27,7 @@ class DirigeraHub {
     if (options.access_token) this.#bearerToken = String(options.access_token)
     // console.log(this.#bearerToken)
     this.options.clientName = options.clientName ? String(options.clientName) : os.hostname()
-    if (options.debug && typeof options.debug === 'number' && options.debug >= 0 && options.debug <= 5) {
+    if (typeof options.debug === 'number' && options.debug >= 0 && options.debug <= 5) {
       this.options.debug = options.debug ? options.debug : 0
     } else { errors.push('Input for debug should be number in range 0-5.') }
     if (errors.length) throw new Error(errors.join('; '))

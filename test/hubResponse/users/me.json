@@ -1,0 +1,10 @@
+{
+  "uid": "804c9ade-e937-4e99-1234-eeef2222bf65",
+  "name": "test-node-dirigera",
+  "audience": "homesmart.local",
+  "email": "",
+  "createdTimestamp": "2023-10-10T17:37:00.000Z",
+  "verifiedUid": "",
+  "role": "home_member",
+  "remoteUser": 0
+}

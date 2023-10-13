@@ -1,12 +1,12 @@
 {
   "name": "node-dirigera-promise",
   "version": "0.4.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Node.js module to interact with Dirigera hub from Ikea smart home system as of year 2023",
+  "main": "index.mjs",
   "scripts": {
     "start": "node .",
     "start-test": "node logs/test.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node test/test.spec.js",
     "start-hub": "node fakeDirigeraHub.js"
   },
   "keywords": [],
@@ -22,5 +22,14 @@
   "exports": {
     "import": "./index.mjs",
     "require": "./index.cjs"
-  }
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/zinen/node-dirigera-promise/issues"
+  },
+  "files": [
+    "./index.*"
+  ]
 }

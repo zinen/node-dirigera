@@ -1,0 +1,50 @@
+[
+  {
+    "id": "265fb74f-544b-4f09-1234-765a5f411aa1_1",
+    "type": "blinds",
+    "deviceType": "blinds",
+    "createdAt": "2023-09-30T14:37:14.000Z",
+    "isReachable": true,
+    "lastSeen": "2023-10-10T14:36:59.000Z",
+    "attributes": {
+      "customName": "Blind no 1",
+      "model": "PRAKTLYSING cellular blind",
+      "manufacturer": "IKEA of Sweden",
+      "firmwareVersion": "24.4.13",
+      "hardwareVersion": "1",
+      "serialNumber": "4C5BB3FAAAA74",
+      "productCode": "E2021",
+      "batteryPercentage": 67,
+      "blindsTargetLevel": 0,
+      "blindsCurrentLevel": 0,
+      "blindsState": "stopped",
+      "permittingJoin": false,
+      "otaStatus": "upToDate",
+      "otaState": "readyToCheck",
+      "otaProgress": 0,
+      "otaPolicy": "autoUpdate",
+      "otaScheduleStart": "00:00",
+      "otaScheduleEnd": "00:00"
+    },
+    "capabilities": {
+      "canSend": [],
+      "canReceive": [
+        "customName",
+        "blindsCurrentLevel",
+        "blindsTargetLevel",
+        "blindsState"
+      ]
+    },
+    "room": {
+      "id": "98694611-70fd-44c5-1234-685d8347eb1d",
+      "name": "room 1",
+      "color": "ikea_green_no_65",
+      "icon": "rooms_cutlery"
+    },
+    "deviceSet": [],
+    "remoteLinks": [
+      "a578dfac-716c-43e6-1234-107cb6b9dcdf_1"
+    ],
+    "isHidden": false
+  }
+]

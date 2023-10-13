@@ -1,0 +1,67 @@
+[
+  {
+    "id": "8a38a1f1-1234-4dfe-8e33-713af5c0b78b",
+    "info": {
+      "name": "Good night",
+      "icon": "scenes_sun_horizon"
+    },
+    "type": "userScene",
+    "triggers": [
+      {
+        "id": "3defe3fd-946c-1234-a66a-ef7e69f9a11a",
+        "type": "time",
+        "triggeredAt": "2023-10-10T16:15:00.840Z",
+        "disabled": false,
+        "trigger": {
+          "days": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+          ],
+          "time": "18:15"
+        },
+        "nextTriggerAt": "2023-10-11T16:15:00.000Z",
+        "endTriggerEvent": {
+          "type": "sunriseSunset",
+          "trigger": {
+            "type": "sunrise",
+            "offset": 0
+          },
+          "nextTriggerAt": null
+        }
+      },
+      {
+        "id": "3cf9a576-c433-4713-1334-c42746db65ee",
+        "type": "app",
+        "disabled": false,
+        "endTriggerEvent": {
+          "type": "sunriseSunset",
+          "trigger": {
+            "type": "sunrise",
+            "offset": 0
+          },
+          "nextTriggerAt": null
+        }
+      }
+    ],
+    "actions": [
+      {
+        "id": "103d345f-0281-4df5-123f-f2fbd4a398ec_1",
+        "type": "device",
+        "deviceId": "103d345f-0281-4df5-123f-f2fbd4a398ec_1",
+        "attributes": {
+          "blindsTargetLevel": 100
+        }
+      }
+    ],
+    "commands": [],
+    "createdAt": "2023-09-30T09:31:39.859Z",
+    "lastCompleted": "2023-10-10T16:15:00.855Z",
+    "lastTriggered": "2023-10-10T16:15:00.855Z",
+    "undoAllowedDuration": 30
+  }
+]
