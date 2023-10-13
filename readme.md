@@ -1,6 +1,4 @@
-# Node-dirigera
-
-*NOT ON npmjs.com yet* 
+# node-dirigera-promise
 
 Early work in progress
 
