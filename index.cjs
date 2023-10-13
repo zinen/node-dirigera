@@ -1,8 +1,8 @@
 'use strict'
-import fetch from 'node-fetch'
-import os from 'node:os'
-import crypto from 'node:crypto'
-import https from 'node:https'
+const fetch = require('node-fetch')
+const os = require('node:os')
+const crypto = require('node:crypto')
+const https = require('node:https')
 
 class DirigeraError extends Error {
   constructor (message, request = null) {
@@ -228,16 +228,16 @@ class DirigeraHub {
     return devicesParsed
   }
 
-  async getDevice (targetId = null, ignoreTimeout = false) {
+  async getDevice (targetId = null, forceNewValues = false) {
     if (this.options.debug > 2) console.log('running getDevice')
     const now = Number(new Date())
-    if (now > this.data.devicesRawTimeout || ignoreTimeout) {
+    if (now > this.data.devicesRawTimeout || forceNewValues) {
       const response = await this.fetch('devices')
-      this.data.devicesRaw = await response.json()
+      this.data.devices = await response.json()
       this.data.devicesRawTimeout = Number(new Date()) + 3000
     }
-    if (!targetId) return this.data.devicesRaw
-    for (const iterator of this.data.devicesRaw) {
+    if (!targetId) return this.data.devices
+    for (const iterator of this.data.devices) {
       if (iterator.id === targetId || (iterator.attributes && iterator.attributes.customName && iterator.attributes.customName === targetId)) {
         return iterator
       }
@@ -247,7 +247,7 @@ class DirigeraHub {
   async setDevice (targetId, attribute, value) {
     if (this.options.debug > 2) console.log('running setDevice')
     let found = false
-    for (const iterator of this.data.devicesRaw) {
+    for (const iterator of this.data.devices) {
       if (iterator.id === targetId || (iterator.attributes && iterator.attributes.customName && iterator.attributes.customName === targetId)) {
         if (iterator.attributes[attribute] !== undefined && typeof iterator.attributes[attribute] !== typeof value) throw new Error(`Device Id ${targetId} cant receive ${attribute} of type ${typeof value} should be ${typeof iterator.attributes[attribute]}`)
         found = iterator.capabilities.canReceive.includes(attribute)
@@ -260,7 +260,7 @@ class DirigeraHub {
 
   getRoom (targetId, type = null) {
     const devices = []
-    for (const iterator of this.data.devicesRaw) {
+    for (const iterator of this.data.devices) {
       if (iterator.room && (iterator.room.id === targetId || iterator.room.name === targetId) && (type === null || iterator.type === type)) {
         if (this.options.debug > 2) console.log('- Match: ' + iterator.attributes.customName)
         devices.push(iterator)
@@ -333,8 +333,4 @@ class DirigeraHub {
   }
 }
 
-export {
-  DirigeraHub
-}
-
-export default DirigeraHub
+module.exports = DirigeraHub

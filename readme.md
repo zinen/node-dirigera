@@ -16,6 +16,9 @@ debug = 0 - 5. Optional, default = 0. 0 means no debugging in console. 5 means a
 clientName = Optional, default = your hostname. The name you find in the Dirigera app for this connection. Will appear after accessToken is setup
 ```js
 import DirigeraHub from 'node-dirigera'
+// OR
+const DirigeraHub = require('node-dirigera')
+
 // First time:
 const options = { hubAddress: '192.1.1.2', debug: 5, clientName: 'test-node-dirigera' }
 
@@ -56,6 +59,8 @@ async function start() {
   // device = null/undefined - returns all devices
   devices = await dirigeraHub.getDevice(device)
   console.log(devices)
+  // The same values are also stored in dirigeraHub.data.devices
+  console.log(dirigeraHub.data.devices)
   // Save accessToken to disk, .env or other config
 }
 start()
