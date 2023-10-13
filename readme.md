@@ -5,8 +5,8 @@
 Early work in progress
 
 Node.js module to interact with Dirigera hub from Ikea smart home system as of year 2023.
-This module aims for low amount of dependencies and promise based.
-
+This module aims for low amount of dependencies and promise based. And not requiring Interactive access to console.
+Install size is right now less then 0,5 MB
 
 ## Examples
 
@@ -121,4 +121,20 @@ start()
 
 ### ETC
 
-Reversed engineered som API points: https://codeberg.org/argrento/dirigera
+Inspiration has been found here:
+
+Reversed engineering of some API points: https://codeberg.org/argrento/dirigera
+
+Python prof-of-concept: https://github.com/mattias73andersson/dirigera-client-poc
+
+Node-red manual flow: https://gist.github.com/ukmoose/f4cce80dea79791c0a130a8ca2379d38
+
+### Other alternatives:
+
+Node.js implementation based on callbacks https://bitbucket.org/fair2/dirigera-simple/src/master/
+ - This one was as of 2023-10-13 not handling errors very pretty or at all some times. 
+ - Install size due to dependencies is 7,5 MB. Thats very big.
+
+Node.js implementation with typescript using promises https://github.com/lpgera/dirigera
+- This one requires as of 2023-10-13 requires Interactive access to console. Deal breaker for server setups.
+- Install size is less then 2 MB. Thats acceptable.
