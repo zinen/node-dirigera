@@ -1,0 +1,71 @@
+{
+  "id": "9b76a28f-fake-469a-fake-bef23cf3d75e_1",
+  "relationId": "9b76a28f-fake-469a-fake-bef23cf3d75e",
+  "type": "gateway",
+  "deviceType": "gateway",
+  "createdAt": "2023-08-01T14:40:13.725Z",
+  "isReachable": true,
+  "lastSeen": "2023-10-14T19:23:00.229Z",
+  "attributes": {
+    "customName": "My home",
+    "model": "DIRIGERA Hub for smart products",
+    "manufacturer": "IKEA of Sweden",
+    "firmwareVersion": "2.391.4",
+    "hardwareVersion": "P2.5",
+    "serialNumber": "9b76a28f-fake-469a-fake-bef23cf3d75e",
+    "identifyStarted": "2000-01-01T00:00:00.000Z",
+    "identifyPeriod": 0,
+    "otaStatus": "upToDate",
+    "otaState": "readyToCheck",
+    "otaProgress": 0,
+    "otaPolicy": "autoDownload",
+    "otaScheduleStart": "00:00",
+    "otaScheduleEnd": "00:00",
+    "permittingJoin": false,
+    "backendConnected": true,
+    "backendConnectionPersistent": true,
+    "backendOnboardingComplete": true,
+    "backendRegion": "eu-central-x",
+    "backendCountryCode": "DE",
+    "userConsents": [
+      {
+        "name": "analytics",
+        "value": "disabled"
+      },
+      {
+        "name": "diagnostics",
+        "value": "enabled"
+      }
+    ],
+    "logLevel": 3,
+    "coredump": false,
+    "timezone": "Europe/Germany",
+    "nextSunSet": "2023-10-15T16:13:00.000Z",
+    "nextSunRise": "2023-10-15T05:40:00.000Z",
+    "homestateValue": "home",
+    "homestateLastChanged": "2023-08-01T16:40:13+02:00",
+    "countryCode": "XZ",
+    "coordinates": {
+      "latitude": 53.5485718018912,
+      "longitude": 9.799669263464574,
+      "accuracy": -1
+    },
+    "isOn": false
+  },
+  "capabilities": {
+    "canSend": [],
+    "canReceive": [
+      "customName",
+      "permittingJoin",
+      "userConsents",
+      "logLevel",
+      "time",
+      "timezone",
+      "countryCode",
+      "coordinates"
+    ]
+  },
+  "deviceSet": [],
+  "remoteLinks": [],
+  "apiVersion": "1.3.26"
+}

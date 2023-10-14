@@ -5,7 +5,7 @@ const crypto = require('node:crypto')
 const https = require('node:https')
 
 class DirigeraError extends Error {
-  constructor (message, request = null) {
+  constructor(message, request = null) {
     super(message)
     this.name = 'DirigeraError'
     if (request) this.responseStatus = request.status
@@ -17,7 +17,7 @@ class DirigeraError extends Error {
 class DirigeraHub {
   #bearerToken
   options = {}
-  constructor (options) {
+  constructor(options) {
     const errors = []
     if (options.hubAddress) {
       this.options.hubAddress = options.hubAddress
@@ -35,7 +35,7 @@ class DirigeraHub {
     this.data = { devicesRawTimeout: 0 }
   }
 
-  promiseTimeout (delay) {
+  promiseTimeout(delay) {
     if (this.options.debug > 2) console.log('promiseTimeout called waiting for', delay, 'ms')
     return new Promise(resolve => setTimeout(resolve, delay))
   }
@@ -44,7 +44,7 @@ class DirigeraHub {
     rejectUnauthorized: false
   })
 
-  async waitForButtonPress (dirigeraResponseCode, dirigera128Code) {
+  async waitForButtonPress(dirigeraResponseCode, dirigera128Code) {
     if (this.options.debug > 2) console.log('running waitForButtonPress')
     let buttonPressed = false
     let lastRequest = null
@@ -92,12 +92,12 @@ class DirigeraHub {
     }
   }
 
-  generateRandomLetter () {
+  generateRandomLetter() {
     const CodeAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~'
     return CodeAlphabet[Math.floor(Math.random() * CodeAlphabet.length)]
   }
 
-  getCodeVerifier () {
+  getCodeVerifier() {
     const CodeLength = 128
     let s = ''
     for (let i = 0; i < CodeLength; i++) {
@@ -106,7 +106,7 @@ class DirigeraHub {
     return s
   }
 
-  async getAccessToken () {
+  async getAccessToken() {
     if (this.options.debug > 2) console.log('running getAccessToken')
     const dirigera128Code = this.getCodeVerifier()
     const payload = {
@@ -140,7 +140,7 @@ class DirigeraHub {
     return token
   }
 
-  async fetch (endUrl, bypassLoginCheck = false, method = 'GET', body = {}) {
+  async fetch(endUrl, bypassLoginCheck = false, method = 'GET', body = {}) {
     const URL = 'https://' + this.options.hubAddress + ':8443/v1/' + endUrl
     if (!this.loggedIn && !bypassLoginCheck) await this.logIn()
     if (this.options.debug > 3) console.log('running fetch ' + method + ' on URL: ' + URL)
@@ -182,7 +182,7 @@ class DirigeraHub {
     return response
   }
 
-  async logIn () {
+  async logIn() {
     if (this.options.debug > 4) console.log('running logIn')
     if (!this.#bearerToken) throw new DirigeraError('No access token found. Run getAccessToken to get one.')
     const response = await this.fetch('users/me', true)
@@ -191,7 +191,7 @@ class DirigeraHub {
     return true
   }
 
-  parseDevices (devicesRaw) {
+  parseDevices(devicesRaw) {
     if (!devicesRaw) return null
     const devicesParsed = {}
     for (const device of devicesRaw) {
@@ -228,7 +228,7 @@ class DirigeraHub {
     return devicesParsed
   }
 
-  async getDevice (targetId = null, forceNewValues = false) {
+  async getDevice(targetId = null, forceNewValues = false) {
     if (this.options.debug > 2) console.log('running getDevice')
     const now = Number(new Date())
     if (now > this.data.devicesRawTimeout || forceNewValues) {
@@ -242,12 +242,13 @@ class DirigeraHub {
         return iterator
       }
     }
+    throw new Error(`Device Id ${targetId} not found`)
   }
 
-  async setDevice (targetId, attribute, value) {
+  async setDevice(targetId, attribute, value) {
     if (this.options.debug > 2) console.log('running setDevice')
     let found = false
-    for (const iterator of this.data.devices) {
+    for (const iterator of await this.getDevice()) {
       if (iterator.id === targetId || (iterator.attributes && iterator.attributes.customName && iterator.attributes.customName === targetId)) {
         if (iterator.attributes[attribute] !== undefined && typeof iterator.attributes[attribute] !== typeof value) throw new Error(`Device Id ${targetId} cant receive ${attribute} of type ${typeof value} should be ${typeof iterator.attributes[attribute]}`)
         found = iterator.capabilities.canReceive.includes(attribute)
@@ -258,21 +259,22 @@ class DirigeraHub {
     return this.fetch('devices/' + targetId, false, 'PATCH', [{ attributes: { [attribute]: value } }])
   }
 
-  getRoom (targetId, type = null) {
+  async getRoom(targetId, type = null) {
     const devices = []
-    for (const iterator of this.data.devices) {
+    for (const iterator of await this.getDevice()) {
       if (iterator.room && (iterator.room.id === targetId || iterator.room.name === targetId) && (type === null || iterator.type === type)) {
         if (this.options.debug > 2) console.log('- Match: ' + iterator.attributes.customName)
         devices.push(iterator)
       }
     }
+    if (devices.length === 0) throw new Error('getRoom cant find room name or id: ' + String(targetId))
     return devices
   }
 
-  async setRoom (targetId, attribute, value, type = null) {
+  async setRoom(targetId, attribute, value, type = null) {
     if (this.options.debug > 2) console.log('running setRoom on ' + targetId + ' to modify ' + attribute + '. Optional type requirement=' + type)
     const devices = []
-    for (const iterator of this.getRoom(targetId, type)) {
+    for (const iterator of await this.getRoom(targetId, type)) {
       devices.push(this.setDevice(iterator.id, attribute, value).catch(error => ({ status: 'rejected', reason: error })))
     }
     const payback = { ok: [], errors: [] }
@@ -288,7 +290,7 @@ class DirigeraHub {
     return payback
   }
 
-  async getTypeInRoom () {
+  async getTypeInRoom() {
     if (this.options.debug > 2) console.log('running getTypeInRoom')
     const result = {}
     for (const device of (await this.getDevice())) {
@@ -304,28 +306,28 @@ class DirigeraHub {
     return result
   }
 
-  async getScenes () {
-    if (this.options.debug > 2) console.log('running getScenes')
+  async getScenes() {
+    if (this.options.debug > 3) console.log('running getScenes')
     const response = await this.fetch('scenes')
     const data = await response.json()
     return data
   }
 
-  async get (urlEnd) {
-    if (this.options.debug > 2) console.log('running get')
+  async get(urlEnd) {
+    if (this.options.debug > 3) console.log('running get')
     const response = await this.fetch(urlEnd)
     const data = await response.json()
     return data
   }
 
-  async put (urlEnd, body) {
-    if (this.options.debug > 2) console.log('running put')
+  async put(urlEnd, body) {
+    if (this.options.debug > 3) console.log('running put')
     const response = await this.fetch(urlEnd, false, 'PUT', body)
     const data = await response.text()
     return data
   }
 
-  async post (urlEnd, body) {
+  async post(urlEnd, body) {
     if (this.options.debug > 2) console.log('running POST')
     const response = await this.fetch(urlEnd, false, 'POST', body)
     const data = await response.text()

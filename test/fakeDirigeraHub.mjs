@@ -1,9 +1,11 @@
 import https from 'https'
 import fs from 'fs/promises'
 import { resolve, join } from 'path'
+
 const __dirname = resolve()
 
-async function start (params) {
+async function fakeHub () {
+  return new Promise(async (resolve, reject) => {
   const privateKey = await fs.readFile(join(__dirname, 'test', 'hubResponse', 'key.pem'), 'utf8')
   const certificate = await fs.readFile(join(__dirname, 'test', 'hubResponse', 'cert.pem'), 'utf8')
   const credentials = { key: privateKey, cert: certificate }
@@ -12,7 +14,7 @@ async function start (params) {
     const requestedPath = new URL(req.url, `https://${req.headers.host}`).pathname
     const authHeader = req.headers.authorization
     if (!authHeader) console.log('Request has no authHeader')
-    console.log('requestedPath', requestedPath)
+    console.log('HUB: requestedPath',req.method, requestedPath)
     const responseWithJSON = ['devices', 'users/me', 'scenes', 'users', 'home']
     if (requestedPath === '/') {
       // Handle the root path
@@ -21,10 +23,10 @@ async function start (params) {
     } else if (requestedPath === '/v1') {
       res.writeHead(200, { 'Content-Type': 'text/plain' })
       res.end('Hello, this is the root path of API v1.')
-    } else if (responseWithJSON.includes(requestedPath.slice(4))) {
+    } else if (req.method == 'GET' && responseWithJSON.includes(requestedPath.slice(4))) {
       try {
         res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
-        const filePath = join(__dirname, 'test', 'hubResponse', requestedPath.slice(4) + '.json')
+        const filePath = join(__dirname, 'test', 'hubResponse', 'get',requestedPath.slice(4) + '.json')
         const data = await fs.readFile(filePath)
         res.end(data)
       } catch {
@@ -41,8 +43,18 @@ async function start (params) {
 
   const port = 8443
   server.listen(port, () => {
-    console.log(`Server is running on https://localhost:${port}`)
+    console.log(`HUB: is running on https://localhost:${port}`)
+    resolve()
   })
+  server.on('error', (e) => {
+    reject(e)
+  });
+  
+})
 }
 
-start()
+export {
+  fakeHub
+}
+
+export default fakeHub

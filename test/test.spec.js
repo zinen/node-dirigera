@@ -1,11 +1,7 @@
 'use strict'
 import DirigeraHub from '../index.mjs'
-import fs from 'node:fs/promises'
-import https from 'node:https'
-import { resolve, join } from 'node:path'
 import assert from 'node:assert'
-
-const __dirname = resolve()
+import fakeHub from './fakeDirigeraHub.mjs'
 
 let fakeHubReady = false
 
@@ -15,48 +11,9 @@ async function promiseTimeout(delay) {
 }
 
 async function startHub(params) {
-  const privateKey = await fs.readFile(join(__dirname, 'test', 'hubResponse', 'key.pem'), 'utf8')
-  const certificate = await fs.readFile(join(__dirname, 'test', 'hubResponse', 'cert.pem'), 'utf8')
-  const credentials = { key: privateKey, cert: certificate }
-
-  const server = https.createServer(credentials, async (req, res) => {
-    const requestedPath = new URL(req.url, `https://${req.headers.host}`).pathname
-    const authHeader = req.headers.authorization
-    if (!authHeader) console.log('Request has no authHeader')
-    console.log('HUB: requestedPath', requestedPath)
-    const responseWithJSON = ['devices', 'users/me', 'scenes', 'users', 'home']
-    if (requestedPath === '/') {
-      // Handle the root path
-      res.writeHead(200, { 'Content-Type': 'text/plain' })
-      res.end('Hello, this is the root path.')
-    } else if (requestedPath === '/v1') {
-      res.writeHead(200, { 'Content-Type': 'text/plain' })
-      res.end('Hello, this is the root path of API v1.')
-    } else if (responseWithJSON.includes(requestedPath.slice(4))) {
-      try {
-        res.writeHead(200, { 'content-type': 'application/json; charset=utf-8' })
-        const filePath = join(__dirname, 'test', 'hubResponse', requestedPath.slice(4) + '.json')
-        const data = await fs.readFile(filePath)
-        res.end(data)
-      } catch {
-        res.writeHead(404, { 'Content-Type': 'text/plain' })
-        const errorMessage = 'Not Found. Should have been there: ' + requestedPath.slice(4) + '.json'
-        console.warn(errorMessage)
-        res.end(errorMessage)
-      }
-    } else {
-      res.writeHead(404, { 'Content-Type': 'text/plain' })
-      res.end('Not Found')
-    }
-  })
-
-  const port = 8443
-  server.listen(port, () => {
-    console.log(`HUB: is running on https://localhost:${port}`)
-    fakeHubReady = true
-  })
+  await fakeHub()
+  fakeHubReady = true
 }
-
 startHub()
 
 
@@ -69,21 +26,304 @@ async function startTest() {
   const deviceData = await dirigeraHub.getDevice()
   const deviceDataExpected = [
     {
-      id: '265fb74f-544b-4f09-1234-765a5f411aa1_1',
+      "id": "9b76a28f-fake-469a-fake-bef23cf3d75e_1",
+      "relationId": "9b76a28f-fake-469a-fake-bef23cf3d75e",
+      "type": "gateway",
+      "deviceType": "gateway",
+      "createdAt": "2023-08-01T14:40:13.725Z",
+      "isReachable": true,
+      "lastSeen": "2023-10-14T19:23:00.229Z",
+      "attributes": {
+        "customName": "My home",
+        "model": "DIRIGERA Hub for smart products",
+        "manufacturer": "IKEA of Sweden",
+        "firmwareVersion": "2.391.4",
+        "hardwareVersion": "P2.5",
+        "serialNumber": "9b76a28f-fake-469a-fake-bef23cf3d75e",
+        "identifyStarted": "2000-01-01T00:00:00.000Z",
+        "identifyPeriod": 0,
+        "otaStatus": "upToDate",
+        "otaState": "readyToCheck",
+        "otaProgress": 0,
+        "otaPolicy": "autoDownload",
+        "otaScheduleStart": "00:00",
+        "otaScheduleEnd": "00:00",
+        "permittingJoin": false,
+        "backendConnected": true,
+        "backendConnectionPersistent": true,
+        "backendOnboardingComplete": true,
+        "backendRegion": "eu-central-x",
+        "backendCountryCode": "DE",
+        "userConsents": [
+          {
+            "name": "analytics",
+            "value": "disabled"
+          },
+          {
+            "name": "diagnostics",
+            "value": "enabled"
+          }
+        ],
+        "logLevel": 3,
+        "coredump": false,
+        "timezone": "Europe/Germany",
+        "nextSunSet": "2023-10-15T16:13:00.000Z",
+        "nextSunRise": "2023-10-15T05:40:00.000Z",
+        "homestateValue": "home",
+        "homestateLastChanged": "2023-08-01T16:40:13+02:00",
+        "countryCode": "XZ",
+        "coordinates": {
+          "latitude": 53.5485718018912,
+          "longitude": 9.799669263464574,
+          "accuracy": -1
+        },
+        "isOn": false
+      },
+      "capabilities": {
+        "canSend": [],
+        "canReceive": [
+          "customName",
+          "permittingJoin",
+          "userConsents",
+          "logLevel",
+          "time",
+          "timezone",
+          "countryCode",
+          "coordinates"
+        ]
+      },
+      "deviceSet": [],
+      "remoteLinks": []
+    },
+    {
+      "id": "1e3d3d06-fake-425d-fake-403465e0733d_1",
+      "type": "blinds",
+      "deviceType": "blinds",
+      "createdAt": "2023-10-08T13:34:47.000Z",
+      "isReachable": true,
+      "lastSeen": "2023-10-14T17:15:16.000Z",
+      "attributes": {
+        "customName": "Blinds south wall",
+        "model": "PRAKTLYSING cellular blind",
+        "manufacturer": "IKEA of Sweden",
+        "firmwareVersion": "24.4.13",
+        "hardwareVersion": "1",
+        "serialNumber": "B4E3F9FAKED5C5C9",
+        "productCode": "E2021",
+        "batteryPercentage": 11,
+        "blindsTargetLevel": 0,
+        "blindsCurrentLevel": 0,
+        "blindsState": "stopped",
+        "permittingJoin": false,
+        "otaStatus": "upToDate",
+        "otaState": "readyToCheck",
+        "otaProgress": 0,
+        "otaPolicy": "autoUpdate",
+        "otaScheduleStart": "00:00",
+        "otaScheduleEnd": "00:00"
+      },
+      "capabilities": {
+        "canSend": [],
+        "canReceive": [
+          "customName",
+          "blindsCurrentLevel",
+          "blindsTargetLevel",
+          "blindsState"
+        ]
+      },
+      "room": {
+        "id": "98694611-fake-44c5-fake-685d8347eb1d",
+        "name": "Office",
+        "color": "ikea_green_no_65",
+        "icon": "rooms_cutlery"
+      },
+      "deviceSet": [],
+      "remoteLinks": [
+        "a578dfac-fake-43e6-fake-107cb6b9dcdf_1"
+      ],
+      "isHidden": false
+    },
+    {
+      "id": "a578dfac-fake-43e6-fake-107cb6b9dcdf_1",
+      "type": "controller",
+      "deviceType": "blindsController",
+      "createdAt": "2023-09-29T18:21:16.000Z",
+      "isReachable": true,
+      "lastSeen": "2023-10-14T19:22:47.000Z",
+      "attributes": {
+        "customName": "Remote office",
+        "model": "TRADFRI open/close remote",
+        "manufacturer": "IKEA of Sweden",
+        "firmwareVersion": "24.4.6",
+        "hardwareVersion": "1",
+        "serialNumber": "F4B3B1FAKE8B2F97",
+        "productCode": "E1766",
+        "batteryPercentage": 75,
+        "isOn": false,
+        "lightLevel": 1,
+        "blindsCurrentLevel": 0,
+        "blindsState": "",
+        "permittingJoin": false,
+        "otaStatus": "upToDate",
+        "otaState": "readyToCheck",
+        "otaProgress": 0,
+        "otaPolicy": "autoUpdate",
+        "otaScheduleStart": "00:00",
+        "otaScheduleEnd": "00:00"
+      },
+      "capabilities": {
+        "canSend": [
+          "isOn",
+          "lightLevel",
+          "blindsState"
+        ],
+        "canReceive": [
+          "customName"
+        ]
+      },
+      "room": {
+        "id": "98694611-fake-44c5-fake-685d8347eb1d",
+        "name": "Office",
+        "color": "ikea_green_no_65",
+        "icon": "rooms_cutlery"
+      },
+      "deviceSet": [],
+      "remoteLinks": [],
+      "isHidden": false
+    },
+    {
+      "id": "52900ad7-fake-4262-fake-8986a069ada9_1",
+      "type": "light",
+      "deviceType": "light",
+      "createdAt": "2023-10-14T12:27:22.000Z",
+      "isReachable": true,
+      "lastSeen": "2023-10-14T19:27:50.000Z",
+      "attributes": {
+        "customName": "Lamp one",
+        "firmwareVersion": "1.1.003",
+        "hardwareVersion": "1",
+        "manufacturer": "IKEA of Sweden",
+        "model": "TRADFRI bulb E14 WS globe 470lm",
+        "productCode": "LED2101G4",
+        "serialNumber": "287681FAKE6FA48A",
+        "isOn": true,
+        "startupOnOff": "startOn",
+        "lightLevel": 40,
+        "colorMode": "temperature",
+        "startupTemperature": -1,
+        "colorTemperature": 3003,
+        "colorTemperatureMax": 2202,
+        "colorTemperatureMin": 4000,
+        "identifyPeriod": 0,
+        "identifyStarted": "2000-01-01T00:00:00.000Z",
+        "permittingJoin": false,
+        "otaPolicy": "autoUpdate",
+        "otaProgress": 0,
+        "otaScheduleEnd": "00:00",
+        "otaScheduleStart": "00:00",
+        "otaState": "readyToCheck",
+        "otaStatus": "upToDate",
+        "circadianRhythmMode": ""
+      },
+      "capabilities": {
+        "canSend": [],
+        "canReceive": [
+          "customName",
+          "isOn",
+          "lightLevel",
+          "colorTemperature"
+        ]
+      },
+      "room": {
+        "id": "190aae9d-fake-4a12-fake-2b5c71282e20",
+        "name": "Living room",
+        "color": "ikea_red_no_39",
+        "icon": "rooms_arm_chair"
+      },
+      "deviceSet": [],
+      "remoteLinks": [],
+      "isHidden": false
+    }
+  ]
+  assert.deepStrictEqual(deviceData, deviceDataExpected)
+
+  const deviceData2 = await dirigeraHub.getDevice("52900ad7-fake-4262-fake-8986a069ada9_1")
+  const deviceDataExpected2 = {
+    "id": "52900ad7-fake-4262-fake-8986a069ada9_1",
+    "type": "light",
+    "deviceType": "light",
+    "createdAt": "2023-10-14T12:27:22.000Z",
+    "isReachable": true,
+    "lastSeen": "2023-10-14T19:27:50.000Z",
+    "attributes": {
+      "customName": "Lamp one",
+      "firmwareVersion": "1.1.003",
+      "hardwareVersion": "1",
+      "manufacturer": "IKEA of Sweden",
+      "model": "TRADFRI bulb E14 WS globe 470lm",
+      "productCode": "LED2101G4",
+      "serialNumber": "287681FAKE6FA48A",
+      "isOn": true,
+      "startupOnOff": "startOn",
+      "lightLevel": 40,
+      "colorMode": "temperature",
+      "startupTemperature": -1,
+      "colorTemperature": 3003,
+      "colorTemperatureMax": 2202,
+      "colorTemperatureMin": 4000,
+      "identifyPeriod": 0,
+      "identifyStarted": "2000-01-01T00:00:00.000Z",
+      "permittingJoin": false,
+      "otaPolicy": "autoUpdate",
+      "otaProgress": 0,
+      "otaScheduleEnd": "00:00",
+      "otaScheduleStart": "00:00",
+      "otaState": "readyToCheck",
+      "otaStatus": "upToDate",
+      "circadianRhythmMode": ""
+    },
+    "capabilities": {
+      "canSend": [],
+      "canReceive": [
+        "customName",
+        "isOn",
+        "lightLevel",
+        "colorTemperature"
+      ]
+    },
+    "room": {
+      "id": "190aae9d-fake-4a12-fake-2b5c71282e20",
+      "name": "Living room",
+      "color": "ikea_red_no_39",
+      "icon": "rooms_arm_chair"
+    },
+    "deviceSet": [],
+    "remoteLinks": [],
+    "isHidden": false
+  }
+  assert.deepStrictEqual(deviceData2, deviceDataExpected2)
+
+  const deviceData3 = await dirigeraHub.getDevice("Lamp one")
+  assert.deepStrictEqual(deviceData3, deviceDataExpected2)
+
+  const getRoom = await dirigeraHub.getRoom("Office")
+  const getRoomExpected = [
+    {
+      id: '1e3d3d06-fake-425d-fake-403465e0733d_1',
       type: 'blinds',
       deviceType: 'blinds',
-      createdAt: '2023-09-30T14:37:14.000Z',
+      createdAt: '2023-10-08T13:34:47.000Z',
       isReachable: true,
-      lastSeen: '2023-10-10T14:36:59.000Z',
+      lastSeen: '2023-10-14T17:15:16.000Z',
       attributes: {
-        customName: 'Blind no 1',
+        customName: 'Blinds south wall',
         model: 'PRAKTLYSING cellular blind',
         manufacturer: 'IKEA of Sweden',
         firmwareVersion: '24.4.13',
         hardwareVersion: '1',
-        serialNumber: '4C5BB3FAAAA74',
+        serialNumber: 'B4E3F9FAKED5C5C9',
         productCode: 'E2021',
-        batteryPercentage: 67,
+        batteryPercentage: 11,
         blindsTargetLevel: 0,
         blindsCurrentLevel: 0,
         blindsState: 'stopped',
@@ -96,25 +336,80 @@ async function startTest() {
         otaScheduleEnd: '00:00'
       },
       capabilities: {
-        canSend: [], canReceive: ['customName',
-        'blindsCurrentLevel',
-        'blindsTargetLevel',
-        'blindsState' ]},
+        canSend: [],
+        canReceive: [
+          'customName',
+          'blindsCurrentLevel',
+          'blindsTargetLevel',
+          'blindsState'
+        ]
+      },
       room: {
-        id: '98694611-70fd-44c5-1234-685d8347eb1d',
-        name: 'room 1',
+        id: '98694611-fake-44c5-fake-685d8347eb1d',
+        name: 'Office',
         color: 'ikea_green_no_65',
         icon: 'rooms_cutlery'
       },
       deviceSet: [],
-      remoteLinks: ['a578dfac-716c-43e6-1234-107cb6b9dcdf_1'],
+      remoteLinks: [ 'a578dfac-fake-43e6-fake-107cb6b9dcdf_1' ],
+      isHidden: false
+    },
+    {
+      id: 'a578dfac-fake-43e6-fake-107cb6b9dcdf_1',
+      type: 'controller',
+      deviceType: 'blindsController',
+      createdAt: '2023-09-29T18:21:16.000Z',
+      isReachable: true,
+      lastSeen: '2023-10-14T19:22:47.000Z',
+      attributes: {
+        customName: 'Remote office',
+        model: 'TRADFRI open/close remote',
+        manufacturer: 'IKEA of Sweden',
+        firmwareVersion: '24.4.6',
+        hardwareVersion: '1',
+        serialNumber: 'F4B3B1FAKE8B2F97',
+        productCode: 'E1766',
+        batteryPercentage: 75,
+        isOn: false,
+        lightLevel: 1,
+        blindsCurrentLevel: 0,
+        blindsState: '',
+        permittingJoin: false,
+        otaStatus: 'upToDate',
+        otaState: 'readyToCheck',
+        otaProgress: 0,
+        otaPolicy: 'autoUpdate',
+        otaScheduleStart: '00:00',
+        otaScheduleEnd: '00:00'
+      },
+      capabilities: {
+        canSend: [ 'isOn', 'lightLevel', 'blindsState' ],
+        canReceive: [ 'customName' ]
+      },
+      room: {
+        id: '98694611-fake-44c5-fake-685d8347eb1d',
+        name: 'Office',
+        color: 'ikea_green_no_65',
+        icon: 'rooms_cutlery'
+      },
+      deviceSet: [],
+      remoteLinks: [],
       isHidden: false
     }
   ]
-  assert.deepStrictEqual(deviceData, deviceDataExpected)
-
+  assert.deepStrictEqual(getRoom, getRoomExpected)
+  try {
+    
+  } catch (error) {
+    
+  }
+  const expectedErrorMessage = {message: 'Device Id asdasdas not found'}
+  await assert.rejects(
+    dirigeraHub.getDevice("asdasdas"),
+    expectedErrorMessage
+  );
   const roomData = await dirigeraHub.getTypeInRoom()
-  const roomDataExpected = { blinds: ['room 1'] }
+  const roomDataExpected = { blinds: ['Office'], controller: ['Office'],light: ['Living room'] }
   assert.deepStrictEqual(roomData, roomDataExpected)
 
   console.log('Module tests done. All good. Reach end of test')

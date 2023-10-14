@@ -1,31 +1,31 @@
 [
   {
-    "uid": "cbb3b24c-834f-47f4-af85-8856e13bef2f",
-    "name": "HTC 2",
+    "uid": "cbb3b24c-fake-47f4-fake-8856e13bef2f",
+    "name": "fakeMobile, 3210N",
     "audience": "homesmart.local",
     "email": "",
     "createdTimestamp": "2023-09-26T18:35:56.000Z",
-    "verifiedUid": "05995508-arsa-5cf2-168c-a988e264d248",
+    "verifiedUid": "05995508-fake-5cf2-fake-a988e264d248",
     "role": "home_member",
     "remoteUser": 0
   },
   {
-    "uid": "05995508-arsa-5cf2-168c-a988e264d248",
-    "name": "HTC 3",
+    "uid": "05995508-fake-5cf2-fake-a988e264d248",
+    "name": "fakeMobile, 3320X",
     "audience": "homesmart.global",
-    "email": "hotmail@hotmail.com",
+    "email": "stop@it.pl",
     "createdTimestamp": "2023-09-26T18:37:41.000Z",
     "verifiedUid": "",
     "role": "host",
     "remoteUser": 0
   },
   {
-    "uid": "f73c8981-asdq-4676-1577-f55befa0f2be",
-    "name": "HTC 3",
+    "uid": "f73c8981-fake-4676-9163-fakeefa0f2be",
+    "name": "fakeMobile, 3320X",
     "audience": "homesmart.local",
     "email": "",
     "createdTimestamp": "2023-10-06T12:45:35.000Z",
-    "verifiedUid": "05995508-arsa-5cf2-168c-a988e264d248",
+    "verifiedUid": "05995508-fake-5cf2-fake-a988e264d248",
     "role": "home_member",
     "remoteUser": 0
   }

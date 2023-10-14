@@ -120,6 +120,9 @@ async function start() {
 start()
 ```
 
+Commands:
+getTypeInRoom('office')
+
 ### ETC
 
 Inspiration has been found here:

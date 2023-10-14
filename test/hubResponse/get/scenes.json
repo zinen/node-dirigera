@@ -1,16 +1,16 @@
 [
   {
-    "id": "8a38a1f1-1234-4dfe-8e33-713af5c0b78b",
+    "id": "8a38a1f1-3166-fake-8e33-fakef5c0b78b",
     "info": {
-      "name": "Good night",
+      "name": "Scene office",
       "icon": "scenes_sun_horizon"
     },
     "type": "userScene",
     "triggers": [
       {
-        "id": "3defe3fd-946c-1234-a66a-ef7e69f9a11a",
+        "id": "3defe3fd-946c-fake-a66a-fake69f9a11a",
         "type": "time",
-        "triggeredAt": "2023-10-10T16:15:00.840Z",
+        "triggeredAt": "2023-10-14T16:15:00.466Z",
         "disabled": false,
         "trigger": {
           "days": [
@@ -24,7 +24,7 @@
           ],
           "time": "18:15"
         },
-        "nextTriggerAt": "2023-10-11T16:15:00.000Z",
+        "nextTriggerAt": "2023-10-15T16:15:00.000Z",
         "endTriggerEvent": {
           "type": "sunriseSunset",
           "trigger": {
@@ -35,7 +35,7 @@
         }
       },
       {
-        "id": "3cf9a576-c433-4713-1334-c42746db65ee",
+        "id": "3cf9a576-c433-fake-9033-fake46db65ee",
         "type": "app",
         "disabled": false,
         "endTriggerEvent": {
@@ -50,9 +50,9 @@
     ],
     "actions": [
       {
-        "id": "103d345f-0281-4df5-123f-f2fbd4a398ec_1",
+        "id": "103d345f-0281-fake-b8ff-faked4a398ec_1",
         "type": "device",
-        "deviceId": "103d345f-0281-4df5-123f-f2fbd4a398ec_1",
+        "deviceId": "103d345f-0281-fake-b8ff-faked4a398ec_1",
         "attributes": {
           "blindsTargetLevel": 100
         }
@@ -60,8 +60,8 @@
     ],
     "commands": [],
     "createdAt": "2023-09-30T09:31:39.859Z",
-    "lastCompleted": "2023-10-10T16:15:00.855Z",
-    "lastTriggered": "2023-10-10T16:15:00.855Z",
+    "lastCompleted": "2023-10-14T16:15:00.524Z",
+    "lastTriggered": "2023-10-14T16:15:00.524Z",
     "undoAllowedDuration": 30
   }
 ]

@@ -7,7 +7,7 @@
     "start": "node .",
     "start-test": "node logs/test.js",
     "test": "node test/test.spec.js",
-    "start-hub": "node fakeDirigeraHub.js"
+    "start-hub": "node test/fakeDirigeraHub.mjs"
   },
   "keywords": [],
   "author": "",
