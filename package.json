@@ -1,13 +1,13 @@
 {
   "name": "node-dirigera-promise",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Node.js module to interact with Dirigera hub from Ikea smart home system as of year 2023",
   "main": "index.mjs",
   "scripts": {
     "start": "node .",
-    "start-test": "node logs/test.js",
+    "start-dev": "node logs/dev.js",
     "test": "node test/test.spec.js",
-    "start-hub": "node test/fakeDirigeraHub.mjs"
+    "start-hub": "node test/start-hub.js"
   },
   "keywords": [],
   "author": "",

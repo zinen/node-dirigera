@@ -14,6 +14,15 @@ class DirigeraError extends Error {
   }
 }
 
+/**
+ * @class DirigeraHub
+ * options: hubAddress,access_token,clientName,debug
+ * @param {object} options with:
+ * @param {string} hubAddress String with ip/dns of hub
+ * @param {string} access_token 
+ * @param {string} clientName 
+ * @param {number} debug number 0-5 debug level
+ */
 class DirigeraHub {
   #bearerToken
   options = {}

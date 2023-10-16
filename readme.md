@@ -123,6 +123,19 @@ start()
 Commands:
 getTypeInRoom('office')
 
+# Testing
+
+Code testing is done against a "fake" hub made in node. See test/fakeDirigeraHub.mjs for details.
+
+## Support methods and calls for fake hub:
+
+**Supported**
+- All GET methods
+- Auth and token
+
+*Not supported yet*
+- All PUT, POST, PATCH, UPDATE methods
+
 ### ETC
 
 Inspiration has been found here:
