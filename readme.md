@@ -8,6 +8,10 @@ Install size is right now less then 0,5 MB
 
 ## Examples
 
+See test folder for examples of what is returned
+
+# Commands
+
 hubAddress = ip/DNS/hostname of hub.
 access_token = Will be made when you push the button on the backside of the hub.
 debug = 0 - 5. Optional, default = 0. 0 means no debugging in console. 5 means a lot of debugging 
@@ -119,9 +123,6 @@ async function start() {
 }
 start()
 ```
-
-Commands:
-getTypeInRoom('office')
 
 # Testing
 

@@ -36,7 +36,7 @@ class DirigeraHub {
     if (options.access_token) this.#bearerToken = String(options.access_token)
     // console.log(this.#bearerToken)
     this.options.clientName = options.clientName ? String(options.clientName) : os.hostname()
-    if (typeof options.debug === 'number' && options.debug >= 0 && options.debug <= 5) {
+    if (options.debug == undefined ||  (typeof options.debug === 'number' && options.debug >= 0 && options.debug <= 5)) {
       this.options.debug = options.debug ? options.debug : 0
     } else { errors.push('Input for debug should be number in range 0-5.') }
     if (errors.length) throw new Error(errors.join('; '))
@@ -115,6 +115,12 @@ class DirigeraHub {
     return s
   }
 
+  /**
+   *
+   *
+   * @returns access token as a string
+   * @memberof DirigeraHub
+   */
   async getAccessToken() {
     if (this.options.debug > 2) console.log('running getAccessToken')
     const dirigera128Code = this.getCodeVerifier()
@@ -149,6 +155,16 @@ class DirigeraHub {
     return token
   }
 
+  /**
+   *
+   *
+   * @param {string} endUrl
+   * @param {boolean} [bypassLoginCheck=false]
+   * @param {string} [method='GET']
+   * @param {object} [body={}]
+   * @returns response object
+   * @memberof DirigeraHub
+   */
   async fetch(endUrl, bypassLoginCheck = false, method = 'GET', body = {}) {
     const URL = 'https://' + this.options.hubAddress + ':8443/v1/' + endUrl
     if (!this.loggedIn && !bypassLoginCheck) await this.logIn()
@@ -191,6 +207,12 @@ class DirigeraHub {
     return response
   }
 
+  /**
+   *
+   *
+   * @returns true on success else throws an error
+   * @memberof DirigeraHub
+   */
   async logIn() {
     if (this.options.debug > 4) console.log('running logIn')
     if (!this.#bearerToken) throw new DirigeraError('No access token found. Run getAccessToken to get one.')
@@ -200,43 +222,15 @@ class DirigeraHub {
     return true
   }
 
-  parseDevices(devicesRaw) {
-    if (!devicesRaw) return null
-    const devicesParsed = {}
-    for (const device of devicesRaw) {
-      if (device.type === 'gateway') continue
 
-      if (!Object.prototype.hasOwnProperty.call(devicesParsed, device.type)) {
-        devicesParsed[device.type] = {}
-      }
-      if (!Object.prototype.hasOwnProperty.call(devicesParsed[device.type], device.room.name)) {
-        devicesParsed[device.type][device.room.name] = {
-          canReceive: device.capabilities.canReceive,
-          list: [],
-          id: device.room.id
-        }
-      }
-      const newIndex = devicesParsed[device.type][device.room.name].list.push({
-        id: device.id,
-        name: device.attributes.customName,
-        createdAt: device.createdAt,
-        isReachable: device.isReachable,
-        lastSeen: device.lastSeen
-      })
-      if (Object.prototype.hasOwnProperty.call(device.attributes, 'batteryPercentage')) {
-        devicesParsed[device.type][device.room.name].list[newIndex - 1].batteryPercentage = device.attributes.batteryPercentage
-      }
-      if (device.capabilities.canReceive) {
-        device.capabilities.canReceive.forEach(element => {
-          if (Object.prototype.hasOwnProperty.call(device.attributes, element)) {
-            devicesParsed[device.type][device.room.name].list[newIndex - 1][element] = device.attributes[element]
-          }
-        })
-      }
-    }
-    return devicesParsed
-  }
-
+  /**
+   *
+   *
+   * @param {*} [targetId=null]
+   * @param {boolean} [forceNewValues=false] if function called close together(3 sec) it will reuse the fetched details
+   * @returns full response from API
+   * @memberof DirigeraHub
+   */
   async getDevice(targetId = null, forceNewValues = false) {
     if (this.options.debug > 2) console.log('running getDevice')
     const now = Number(new Date())
@@ -254,6 +248,15 @@ class DirigeraHub {
     throw new Error(`Device Id ${targetId} not found`)
   }
 
+  /**
+   *
+   *
+   * @param {string} targetId
+   * @param {string} attribute
+   * @param {string|number} value
+   * @returns response of fetch request
+   * @memberof DirigeraHub
+   */
   async setDevice(targetId, attribute, value) {
     if (this.options.debug > 2) console.log('running setDevice')
     let found = false
@@ -268,6 +271,14 @@ class DirigeraHub {
     return this.fetch('devices/' + targetId, false, 'PATCH', [{ attributes: { [attribute]: value } }])
   }
 
+  /**
+   *
+   *
+   * @param {string} targetId
+   * @param {string} [type=null]
+   * @returns return devices in room
+   * @memberof DirigeraHub
+   */
   async getRoom(targetId, type = null) {
     const devices = []
     for (const iterator of await this.getDevice()) {
@@ -280,6 +291,16 @@ class DirigeraHub {
     return devices
   }
 
+  /**
+   *
+   *
+   * @param {string} targetId
+   * @param {string} attribute
+   * @param {string|number} value
+   * @param {string} [type=null]
+   * @returns object with keys called OK and errors each with list of strings with events happened
+   * @memberof DirigeraHub
+   */
   async setRoom(targetId, attribute, value, type = null) {
     if (this.options.debug > 2) console.log('running setRoom on ' + targetId + ' to modify ' + attribute + '. Optional type requirement=' + type)
     const devices = []
@@ -297,22 +318,6 @@ class DirigeraHub {
       }
     }
     return payback
-  }
-
-  async getTypeInRoom() {
-    if (this.options.debug > 2) console.log('running getTypeInRoom')
-    const result = {}
-    for (const device of (await this.getDevice())) {
-      if (device.type === 'gateway') continue
-
-      if (!Object.prototype.hasOwnProperty.call(result, device.type)) {
-        result[device.type] = [device.room.name]
-      } else if (!result[device.type].includes(device.room.name)) {
-        result[device.type].push(device.room.name)
-        result[device.type].sort()
-      }
-    }
-    return result
   }
 
   async getScenes() {

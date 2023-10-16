@@ -11,8 +11,18 @@ async function promiseTimeout(delay) {
 }
 
 async function startHub(params) {
-  await fakeHub(1)
-  fakeHubReady = true
+  try {
+    await fakeHub(1)
+  } catch (error) {
+    if (String(error)== 'Error: listen EADDRINUSE: address already in use :::8443') {
+      console.log('Fake hub is running elsewhere. Reusing that connection')
+    } else {
+      console.error(String(error))
+      process.exit(1)
+    }
+  }
+  fakeHubReady = true 
+
 }
 startHub()
 
@@ -414,9 +424,6 @@ async function startTest() {
     dirigeraHub.getDevice("asdasdas"),
     expectedErrorMessage
   );
-  const roomData = await dirigeraHub.getTypeInRoom()
-  const roomDataExpected = { blinds: ['Office'], controller: ['Office'],light: ['Living room'] }
-  assert.deepStrictEqual(roomData, roomDataExpected)
 
   console.log('Module tests done. All good. Reach end of test')
   process.exit()
