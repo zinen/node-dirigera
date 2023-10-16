@@ -1,6 +1,6 @@
 {
   "name": "node-dirigera-promise",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Node.js module to interact with Dirigera hub from Ikea smart home system as of year 2023",
   "main": "index.mjs",
   "scripts": {
@@ -30,5 +30,9 @@
   },
   "files": [
     "./index.*"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zinen/node-dirigera-promise"
+  }
 }
