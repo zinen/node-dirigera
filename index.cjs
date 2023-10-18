@@ -341,7 +341,7 @@ class DirigeraHub {
     return data
   }
 
-  async post (urlEnd, body = null) {
+  async post (urlEnd, body = {}) {
     if (this.options.debug > 2) console.log('running POST. On url', urlEnd, 'and body', body)
     const response = await this.fetch(urlEnd, false, 'POST', body)
     const data = await response.text()

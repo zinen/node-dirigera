@@ -42,8 +42,6 @@ async function startTest () {
   } catch {
     await dirigeraHub.getAccessToken()
   }
-  const deviceData = await dirigeraHub.getDevice()
-  // return
   const deviceDataExpected = [
     {
       id: '9b76a28f-fake-469a-fake-bef23cf3d75e_1',
@@ -265,9 +263,8 @@ async function startTest () {
       isHidden: false
     }
   ]
-  assert.deepStrictEqual(deviceData, deviceDataExpected)
+  assert.deepStrictEqual(await dirigeraHub.getDevice(), deviceDataExpected)
 
-  const deviceData2 = await dirigeraHub.getDevice('52900ad7-fake-4262-fake-8986a069ada9_1')
   const deviceDataExpected2 = {
     id: '52900ad7-fake-4262-fake-8986a069ada9_1',
     type: 'light',
@@ -321,12 +318,10 @@ async function startTest () {
     remoteLinks: [],
     isHidden: false
   }
-  assert.deepStrictEqual(deviceData2, deviceDataExpected2)
+  assert.deepStrictEqual(await dirigeraHub.getDevice('52900ad7-fake-4262-fake-8986a069ada9_1'), deviceDataExpected2)
 
-  const deviceData3 = await dirigeraHub.getDevice('Lamp one')
-  assert.deepStrictEqual(deviceData3, deviceDataExpected2)
+  assert.deepStrictEqual(await dirigeraHub.getDevice('Lamp one'), deviceDataExpected2)
 
-  const getRoom = await dirigeraHub.getRoom('Office')
   const getRoomExpected = [
     {
       id: '1e3d3d06-fake-425d-fake-403465e0733d_1',
@@ -417,15 +412,13 @@ async function startTest () {
       isHidden: false
     }
   ]
-  assert.deepStrictEqual(getRoom, getRoomExpected)
+  assert.deepStrictEqual(await dirigeraHub.getRoom('Office'), getRoomExpected)
 
-  const expectedErrorMessage = { message: 'Device Id asdasdas not found' }
-  await assert.rejects(
+  assert.rejects(
     dirigeraHub.getDevice('asdasdas'),
-    expectedErrorMessage
+    { message: 'Device Id asdasdas not found' }
   )
 
-  const getScene = await dirigeraHub.getScene()
   const getSceneExpected = [
     {
       id: '8a38a1f1-3166-fake-8e33-fakef5c0b78b',
@@ -493,9 +486,8 @@ async function startTest () {
       undoAllowedDuration: 30
     }
   ]
-  assert.deepStrictEqual(getScene, getSceneExpected)
+  assert.deepStrictEqual(await dirigeraHub.getScene(), getSceneExpected)
 
-  const getSceneID = await dirigeraHub.getScene('8a38a1f1-3166-fake-8e33-fakef5c0b78b')
   const getSceneIDExpected = {
     id: '8a38a1f1-3166-fake-8e33-fakef5c0b78b',
     info: {
@@ -561,9 +553,8 @@ async function startTest () {
     lastTriggered: '2023-10-14T16:15:00.524Z',
     undoAllowedDuration: 30
   }
-  assert.deepStrictEqual(getSceneID, getSceneIDExpected)
+  assert.deepStrictEqual(await dirigeraHub.getScene('8a38a1f1-3166-fake-8e33-fakef5c0b78b'), getSceneIDExpected)
 
-  const getSceneName = await dirigeraHub.getScene('Scene office')
   const getSceneNameExpected = {
     id: '8a38a1f1-3166-fake-8e33-fakef5c0b78b',
     info: {
@@ -629,7 +620,14 @@ async function startTest () {
     lastTriggered: '2023-10-14T16:15:00.524Z',
     undoAllowedDuration: 30
   }
-  assert.deepStrictEqual(getSceneName, getSceneNameExpected)
+  assert.deepStrictEqual(await dirigeraHub.getScene('Scene office'), getSceneNameExpected)
+
+  assert.deepStrictEqual(await dirigeraHub.triggerScene('Scene office'), '')
+
+  assert.rejects(
+    dirigeraHub.triggerScene('unknown scene office'),
+    { message: 'Scene Id unknown scene office not found' }
+  )
 
   console.log('Module tests done. All good. Reach end of test')
   process.exit()

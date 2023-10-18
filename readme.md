@@ -156,6 +156,7 @@ Code testing is done against a "fake" hub made in node. See test/fakeDirigeraHub
 **Supported**
 - All GET methods
 - Auth and token
+- POST to scene triggers
 
 *Not supported yet*
 - All PUT, POST, PATCH, UPDATE methods
