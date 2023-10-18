@@ -67,14 +67,18 @@ class DirigeraHub {
     }
     while (!buttonPressed) {
       await this.promiseTimeout(1500)
-      lastRequest = await fetch('https://' + this.options.hubAddress + ':8443/v1/oauth/token',
-        {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          agent: this.#httpsAgent,
-          method: 'POST',
-          body: new URLSearchParams(payload)
-        }
-      )
+      try {
+        lastRequest = await fetch('https://' + this.options.hubAddress + ':8443/v1/oauth/token',
+          {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            agent: this.#httpsAgent,
+            method: 'POST',
+            body: new URLSearchParams(payload)
+          }
+        )
+      } catch {
+        throw new DirigeraError('Error requesting hub data. URL is not responding.')
+      }
       if (String(lastRequest.status).match(/2\d\d/)) {
         buttonPressed = true
         break
@@ -132,12 +136,17 @@ class DirigeraHub {
     }
     const URL = 'https://' + this.options.hubAddress + ':8443/v1/oauth/authorize?' + new URLSearchParams(payload)
     if (this.options.debug > 3) console.log('getAccessToken URL:', URL)
-    const response = await fetch(URL,
-      {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        agent: this.#httpsAgent
-      }
-    )
+    let response
+    try {
+      response = await fetch(URL,
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          agent: this.#httpsAgent
+        }
+      )
+    } catch {
+      throw new DirigeraError('Error requesting hub data. URL is not responding.')
+    }
     if (!String(response.status).match(/2\d\d/)) {
       let responseValue = ''
       try {
@@ -180,7 +189,12 @@ class DirigeraHub {
       payload.body = JSON.stringify(body)
       if (this.options.debug > 4) console.log('Body: ', payload.body)
     }
-    const response = await fetch(URL, payload)
+    let response
+    try {
+      response = await fetch(URL, payload)
+    } catch {
+      throw new DirigeraError('Error requesting hub data. URL is not responding.')
+    }
     if (this.options.debug > 4 && response.headers) {
       console.log('Returned headers response:' + String(response.status))
       response.headers.forEach((value, name) => {
