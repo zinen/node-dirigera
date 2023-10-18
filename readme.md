@@ -50,28 +50,10 @@ async function start() {
 start()
 ```
 
-
-Return device details
-getDevice
-```js
-async function start() {
-  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'lallaal'})
-  // device = 'bedroom light' // define by given name
-  // device = 'b8f3f21e-0fec-4b20-8de4-7fe7f7' // Define by its ID
-  // device = null/undefined - returns all devices
-  devices = await dirigeraHub.getDevice(device)
-  console.log(devices)
-  // The same values are also stored in dirigeraHub.data.devices
-  console.log(dirigeraHub.data.devices)
-  // Save accessToken to disk, .env or other config
-}
-start()
-```
-
 logIn - is also called automatic on relevant calls. This can be used at start of the process to confirm a working access token or to start request a new one.
 ```js
 async function start() {
-  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'lallaal'})
+  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'insertAccessTokenHere'})
   try {
     await dirigeraHub.logIn()
     console.warn('Login success!')
@@ -82,13 +64,27 @@ async function start() {
 start()
 ```
 
+Return device details
+getDevice
+```js
+async function start() {
+  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'insertAccessTokenHere'})
+  // device = 'bedroom light' // define by given name
+  // device = 'b8f3f21e-0fec-4b20-8de4-7fe7f7' // Define by its ID
+  // device = null/undefined - returns all devices
+  devices = await dirigeraHub.getDevice(device)
+  console.log(devices)
+  // Save accessToken to disk, .env or other config
+}
+start()
+```
+
 setDevice
 ```js
 async function start() {
-  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'lallaal'})
+  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'insertAccessTokenHere'})
   // device = 'bedroom blinds' // define by given name
   // device = 'b8f3f21e-0fec-4b20-8de4-7fe7f7' // Define by its ID
-  // device = null/undefined - returns all devices
   const attribute = 'blindsTargetLevel' // Allowed values can be found via getDevice() under capabilities.canReceive
   const value = 0 // 0 = open, 100 = close
   await dirigeraHub.setDevice(device, attribute, value)
@@ -99,7 +95,7 @@ start()
 getRoom
 ```js
 async function start() {
-  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'lallaal'})
+  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'insertAccessTokenHere'})
   // room = 'Bedroom' // define by given name
   // room = 'b8f3f21e-0fec-4b20-8de4-7fe7f7' // Define by its room ID
   const room = 'Bedroom'
@@ -112,7 +108,7 @@ start()
 setRoom
 ```js
 async function start() {
-  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'lallaal'})
+  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'insertAccessTokenHere'})
   // room = 'Bedroom' // define by given name
   // room = 'b8f3f21e-0fec-4b20-8de4-7fe7f7' // Define by its room ID
   const room = 'Bedroom'
@@ -120,6 +116,33 @@ async function start() {
   const deviceType = 'blinds' // Optional: Limit to specific device type
   const result = await dirigeraHub.setRoom(room, attribute, value,deviceType)
   // result = { ok: [list of devices handled ok], errors: [list of errors if any] }
+}
+start()
+```
+
+
+Return device details
+getDevice
+```js
+async function start() {
+  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'insertAccessTokenHere'})
+  // device = 'Night time' // define by given name
+  // device = 'b8f3f21e-0fec-4b20-8de4-7fe7f7' // Define by its ID
+  // device = null/undefined - returns all devices
+  devices = await dirigeraHub.getScene(device)
+  console.log(devices)
+  // Save accessToken to disk, .env or other config
+}
+start()
+```
+
+setDevice
+```js
+async function start() {
+  const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'insertAccessTokenHere'})
+  // device = 'bedroom blinds' // define by given name
+  // device = 'b8f3f21e-0fec-4b20-8de4-7fe7f7' // Define by its ID
+  await dirigeraHub.triggerScene(device)
 }
 start()
 ```
