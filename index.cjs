@@ -188,7 +188,7 @@ class DirigeraHub {
       })
     }
     if (!String(response.status).match(/2\d\d/)) {
-      let responseValue = response.text()
+      let responseValue = await response.text()
       if (this.options.debug > 4) console.log('Response error: ', responseValue)
       try {
         responseValue = JSON.parse(responseValue)
