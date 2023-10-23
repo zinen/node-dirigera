@@ -98,6 +98,7 @@ async function start() {
   const dirigeraHub = new DirigeraHub({ hubAddress: '192.1.1.2', access_token: 'insertAccessTokenHere'})
   // room = 'Bedroom' // define by given name
   // room = 'b8f3f21e-0fec-4b20-8de4-7fe7f7' // Define by its room ID
+  // room = '' or null // will return devices without rooms
   const room = 'Bedroom'
   const deviceType = 'blinds' // Optional: Limit to specific device type
   dirigeraHub.getRoom(room, deviceType)

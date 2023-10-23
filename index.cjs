@@ -279,11 +279,14 @@ class DirigeraHub {
    * @memberof DirigeraHub
    */
   async getRoom (targetId, type = null) {
-    if (this.options.debug > 1) console.log('running getRoom')
+    if (this.options.debug > 1) console.log('running getRoom id', targetId, '. Optional type requirement=', type)
     const devices = []
     for (const iterator of await this.getDevice()) {
       if (iterator.room && (iterator.room.id === targetId || iterator.room.name === targetId) && (type === null || iterator.type === type)) {
         if (this.options.debug > 2) console.log('- Match: ' + iterator.attributes.customName)
+        devices.push(iterator)
+      } else if (!targetId && !iterator.room && (type === null || iterator.type === type)) {
+        if (this.options.debug > 2) console.log('- Match(no room item): ' + iterator.attributes.customName)
         devices.push(iterator)
       }
     }
@@ -303,13 +306,12 @@ class DirigeraHub {
    */
   async setRoom (targetId, attribute, value, type = null) {
     if (this.options.debug > 0) console.log('running setRoom on ' + targetId + ' to modify ' + attribute + '. Optional type requirement=' + type)
-    const devices = []
+    const requests = []
     for (const iterator of await this.getRoom(targetId, type)) {
-      devices.push(this.setDevice(iterator.id, attribute, value).catch(error => ({ status: 'rejected', reason: error })))
+      requests.push(this.setDevice(iterator.id, attribute, value).catch(error => ({ status: 'rejected', reason: error })))
     }
     const payback = { ok: [], errors: [] }
-    const allDone = await Promise.allSettled(devices)
-    for (const result of allDone) {
+    for (const result of await Promise.allSettled(requests)) {
       if (result.value.status === 'rejected') {
         payback.errors.push(String(result.value.reason))
       } else {
