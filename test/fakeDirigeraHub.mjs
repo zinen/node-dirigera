@@ -91,6 +91,10 @@ async function fakeHub (debugLvl) {
         if (!queryData.code_challenge || queryData.code_challenge.length < 20) failedChecks.push('Query must contain code_challenge=a string longer then 20 not:' + String(queryData.code_challenge))
         if (failedChecks.length === 0) {
           fakeHubStore.authorizeActive = true
+          fakeHubStore.timer2 = setTimeout(() => {
+            fakeHubStore.authorizeActive = false
+            console.log('HUB: Paring timed out after 60 seconds')
+          }, 60000)
           fakeHubStore.waitForPush = fakeHubStore.waitForPushMax
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
           res.end('{"code":"0b510398-fake-4dcc-fake-8f09c245ca5f"}')
@@ -139,6 +143,7 @@ async function fakeHub (debugLvl) {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
         res.end('{"access_token":"fakebGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjRlN2RmNmFiYTYwMTM2ZDcyNmRjMWIyfakeMzUwODA1ZGRlOTc3OTY1OTU4Njg0OGMzNmRlMzY2YjhhM2YwNDcifQ.eyJpc3MiOiI5Yjc2YTI4Zi1mMjk5LTQ2OWEtODg0NC1iZWYyM2NmM2Q3NWUiLCJ0eXBlIjoifakeZXNzIiwiYXVkIjoiaG9tZXNtYXJ0LmxvY2FsIiwic3ViIjoiNTU5NWI3ZDAtN2Q3Ni00YjI1LThjODItODNjZmI2MmY0Mjc1IiwiaWF0IjoxNjk3MzkzMDk5LCJleHAiOjIwMTI5NjkwOTl9.c8W087nMe_WNxKzHN_HQ8iE12u9AW8bd6J3fPp3spnS54nUKN_fake6gBwAR5KqWZzNfOlXeb7Tuvahk1JqCww"}')
         fakeHubStore.authorizeActive = false
+        clearTimeout(fakeHubStore.timer2)
       } else if (req.method === 'POST' && requestedPath.match(/^\/v1\/scenes\/[\w\-_]*\/trigger/)) {
         // Apparently this path always returns code 202 even if trigger id is unknown
         // only requirement is that BODY is JSON parsable

@@ -1,5 +1,5 @@
 'use strict'
-const fetch = require('node-fetch')
+// const fetch = require('node-fetch')
 const os = require('node:os')
 const crypto = require('node:crypto')
 const https = require('node:https')
@@ -54,6 +54,40 @@ class DirigeraHub {
     rejectUnauthorized: false
   })
 
+  async fetchRequest (URL, requestOptions = {}) {
+    // console.log('fetchRequest', URL)
+    const testString = URL.match(/https?:\/\//)
+    if (testString) { URL = URL.substring(testString[0].length) }
+    const i = URL.indexOf('/')
+    let [hostname, path] = [URL.slice(0, i), URL.slice(i)]
+    hostname = hostname.split(':')
+    if (path[0] !== '/') { path = '/' + path }
+    requestOptions.hostname = hostname[0]
+    requestOptions.path = path
+    requestOptions.rejectUnauthorized = false
+    if (hostname[1]) requestOptions.port = hostname[1]
+    // console.log('hostname', requestOptions.hostname, 'port', requestOptions.port)
+    // console.log('path', path)
+    if (!('method' in requestOptions)) requestOptions.method = 'GET'
+    const postData = requestOptions.body || null
+    // console.log('Request input', requestOptions)
+    // console.log('Request body', postData)
+    return new Promise(function (resolve, reject) {
+      const request = https.request(requestOptions, res => {
+        let rawData = ''
+        res.on('data', chunk => {
+          rawData += chunk
+        })
+        res.on('end', () => {
+          resolve({ status: res.statusCode, text: rawData, headers: res.headers })
+        })
+      }).on('error', err => {
+        reject(err)
+      })
+      request.end(postData)
+    })
+  }
+
   async waitForButtonPress (dirigeraResponseCode, dirigera128Code) {
     if (this.options.debug > 2) console.log('running waitForButtonPress')
     let buttonPressed = false
@@ -68,12 +102,12 @@ class DirigeraHub {
     while (!buttonPressed) {
       await this.promiseTimeout(1500)
       try {
-        lastRequest = await fetch('https://' + this.options.hubAddress + ':8443/v1/oauth/token',
+        lastRequest = await this.fetchRequest('https://' + this.options.hubAddress + ':8443/v1/oauth/token',
           {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            agent: this.#httpsAgent,
+            // agent: this.#httpsAgent,
             method: 'POST',
-            body: new URLSearchParams(payload)
+            body: String(new URLSearchParams(payload))
           }
         )
       } catch {
@@ -85,7 +119,7 @@ class DirigeraHub {
       } else if (lastRequest.status !== 403) {
         let response
         try {
-          response = await lastRequest.text()
+          response = lastRequest.text
           response = JSON.parse(response).error || JSON.parse(response)
         } catch { }
         throw new DirigeraError(`Error while waiting for button press on hub. Status code: ${lastRequest.status}. Response: ${response}`, lastRequest)
@@ -98,7 +132,7 @@ class DirigeraHub {
     }
     if (buttonPressed) {
       // console.log('Button pressed on Dirigera hub')
-      this.#bearerToken = (await lastRequest.json()).access_token
+      this.#bearerToken = JSON.parse(lastRequest.text).access_token
       return this.#bearerToken
     } else {
       throw new DirigeraError('Button was not pressed within time', lastRequest)
@@ -138,10 +172,10 @@ class DirigeraHub {
     if (this.options.debug > 3) console.log('getAccessToken URL:', URL)
     let response
     try {
-      response = await fetch(URL,
+      response = await this.fetchRequest(URL,
         {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          agent: this.#httpsAgent
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+          // agent: this.#httpsAgent
         }
       )
     } catch {
@@ -150,12 +184,12 @@ class DirigeraHub {
     if (!String(response.status).match(/2\d\d/)) {
       let responseValue = ''
       try {
-        responseValue = await response.text()
+        responseValue = response.text
         responseValue = JSON.parse(responseValue).error || JSON.parse(responseValue)
       } catch { }
       throw new DirigeraError(`Error contacting hub during establishing contact. Status code: ${response.status}. Response: ${responseValue}`, response)
     }
-    const response2 = await response.json()
+    const response2 = JSON.parse(response.text)
     if (this.options.debug > 3) console.log('getAccessToken response:', response2)
     if (!response2.code) throw new Error('The hub response missed an authentication code in response')
     // holder.DirigeraResponseCode = holder.response.code
@@ -181,7 +215,7 @@ class DirigeraHub {
     if (!(['GET', 'POST', 'PUT', 'PATCH'].includes(method))) throw new Error(`Unknown web request method: ${method}. Default is GET`)
     const payload = {
       headers: { Authorization: 'Bearer ' + this.#bearerToken },
-      agent: this.#httpsAgent,
+      // agent: this.#httpsAgent,
       method
     }
     if (method !== 'GET') {
@@ -191,7 +225,7 @@ class DirigeraHub {
     }
     let response
     try {
-      response = await fetch(URL, payload)
+      response = await this.fetchRequest(URL, payload)
     } catch {
       throw new DirigeraError('Error requesting hub data. URL is not responding.')
     }
@@ -202,7 +236,7 @@ class DirigeraHub {
       })
     }
     if (!String(response.status).match(/2\d\d/)) {
-      let responseValue = await response.text()
+      let responseValue = response.text
       if (this.options.debug > 4) console.log('Response error: ', responseValue)
       try {
         responseValue = JSON.parse(responseValue)
@@ -241,7 +275,7 @@ class DirigeraHub {
     const now = Number(new Date())
     if (now > this.#getDeviceTimeout || forceNewValues) {
       const response = await this.fetch('devices')
-      this.data.devices = await response.json()
+      this.data.devices = JSON.parse(response.text)
       this.#getDeviceTimeout = Number(new Date()) + 3000
     }
     if (!targetId) return this.data.devices
@@ -343,7 +377,7 @@ class DirigeraHub {
   async get (urlEnd) {
     if (this.options.debug > 2) console.log('running GET. On url', urlEnd)
     const response = await this.fetch(urlEnd)
-    let data = await response.text()
+    let data = await response.text
     try {
       data = JSON.parse(data)
     } catch { }
@@ -353,14 +387,14 @@ class DirigeraHub {
   async put (urlEnd, body) {
     if (this.options.debug > 2) console.log('running PUT. On url', urlEnd, 'and body', body)
     const response = await this.fetch(urlEnd, false, 'PUT', body)
-    const data = await response.text()
+    const data = await response.text
     return data
   }
 
   async post (urlEnd, body = {}) {
     if (this.options.debug > 2) console.log('running POST. On url', urlEnd, 'and body', body)
     const response = await this.fetch(urlEnd, false, 'POST', body)
-    const data = await response.text()
+    const data = await response.text
     return data
   }
 }
